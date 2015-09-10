@@ -1,10 +1,15 @@
 
-
-<div class='jumbotron text-center'>
-	<h1>Welcome to mean-starter</h1>
-
-	<p>Start building! <b>find me in public/templates/main.html)</b></p>
-
-	<div class='btn btn-success'>{{button}}</div>
-
+<div class="alert alert-danger" role="alert" ng-show='error'>
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <span class="sr-only">Error:</span>
+  {{error}}
 </div>
+
+<pre>{{test}}</pre>
+
+<input type='text' class='form-control' placeholder='Add to test..' ng-model='toAdd'>
+
+<div class='btn btn-success' ng-click='addToTest()'>Add to test</div>
+
+
+<a class='btn btn-primary' ui-sref='startups'>Startups ></a>
