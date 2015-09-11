@@ -1,36 +1,21 @@
 
-app.controller('MainCtrl', function($scope){
+app.controller('MainCtrl', function($scope, $http){
+	$scope.startups = [];
 
-	$scope.test = [1,2,3,4];
-	$scope.error = false;
-	$scope.addToTest = function(){
-		var sortNums = function (a, b) { 
-			return a - b;
-		};
-		// check for zero
-		if($scope.toAdd === '0'){
-			$scope.test.push(0);
-			$scope.test.sort(sortNums);
-			$scope.error = false;
-			return;
-		}
+	var page = 1;
+	$http.get('/api/startups/' + page).then(function(res){
+		$scope.startups = res.data;
+	});
 
-		// make sure we only add numbers
-		var toAdd = parseInt($scope.toAdd);
-
-		if(typeof(toAdd) === 'number' && toAdd){
-			// add to array
-			$scope.test.push(toAdd);
-			console.log(toAdd);
-			$scope.test.sort(sortNums);
-			$scope.error = false;
-
-		} else {
-			console.error('not added to array!');
-			$scope.error = 'You must input a number!';
-		}
-
-		// reset input field
-		$scope.toAdd = '';
+	$scope.loadMoreStartups = function(){
+		console.log('loadMoreStartups fired!');
+		page++;
+		$http.get('/api/startups/' + page).then(function(res){
+			console.log(res);
+			for(var i = 0, len = res.data.length; i < len; i++){
+				$scope.startups.push(res.data[i]);
+			}
+		});
 	};
+	
 });
