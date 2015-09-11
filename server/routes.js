@@ -14,19 +14,19 @@ var myToken = 'ef9bede1b98f2c2b8ff6ff1ad10f9ef40d270ef2d457cc82';
 var friscoLocationTag = '1692';
 
 // search for location tags
-function searchforLocationTag(location){
-	var dfd = Promise.defer();
-	request.get('https://api.angel.co/1/search', {
-		form: {
-			access_token: myToken,
-	    	query: encodeURIComponent(location),
-	    	type: 'LocationTag'
-		}
-	}, function(error, response, body){
-		dfd.resolve(body);
-	});
-	return dfd.promise;
-}
+// function searchforLocationTag(location){
+// 	var dfd = Promise.defer();
+// 	request.get('https://api.angel.co/1/search', {
+// 		form: {
+// 			access_token: myToken,
+// 	    	query: encodeURIComponent(location),
+// 	    	type: 'LocationTag'
+// 		}
+// 	}, function(error, response, body){
+// 		dfd.resolve(body);
+// 	});
+// 	return dfd.promise;
+// }
 
 // get startups in SF
 function getSFStartups(page){
