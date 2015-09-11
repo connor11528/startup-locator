@@ -1,5 +1,6 @@
 var express = require('express'),
 	path = require('path'),
+	fs = require('fs'),
 	rootPath = path.normalize(__dirname + '/../'),
 	apiRouter = express.Router(),
 	router = express.Router();
@@ -36,7 +37,7 @@ function getSFStartups(page){
 		qs: {
 			access_token: myToken,
 			order: 'popularity',
-			page: JSON.stringify(page)
+			page: page
 		},
 		method: 'GET'
 	}, function(error, response, body){
@@ -60,15 +61,19 @@ function searchStartupByName(name){
 	return dfd.promise;
 }
 
+// ROUTES
 module.exports = function(app){
-	// send back SF startups
-	apiRouter.get('/startups', function(req, res){
-		getSFStartups(1).then(function(startupsRes){
-			var startups = JSON.parse(startupsRes);
-			console.log(startups.startups.length)
-			res.json(startups);
+	// get statups by page from angel.co
+	apiRouter.get('/startups/:page', function(req, res){
+
+		getSFStartups(req.params.page).then(function(startups){
+			var startupList = JSON.parse(startups)['startups'];
+			var leanStartupList = filterStartups(startupList);
+			res.json(leanStartupList);
 		});
 	});
+
+
 
 	// angularjs catch all route
 	router.get('/*', function(req, res) {
@@ -78,3 +83,26 @@ module.exports = function(app){
 	app.use('/api', apiRouter);	// haven't built any api yet
 	app.use('/', router);
 };
+
+
+// only give the properties we care about
+function filterStartups(startupList){
+	var filteredList = [];
+	for(var i = 0, len = startupList.length; i < len; i++){
+		var startup = startupList[i];
+
+		filteredList.push({
+			id: startup.id,
+			name: startup.name,
+			angellist_url: startup.angellist_url,
+			logo_url: startup.logo_url,
+			thumb_url: startup.thumb_url,
+			high_concept: startup.high_concept,
+			product_desc: startup.product_desc,
+			company_url: startup.company_url,
+			company_size: startup.company_size
+		});
+	}
+
+	return filteredList;	
+}

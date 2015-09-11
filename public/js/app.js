@@ -1,10 +1,7 @@
 
 var app = angular.module('startup-locator', [
-	'ui.router',
-	'firebase'
+	'ui.router'
 ]);
-
-app.constant('FBURL', 'https://startup-locator.firebaseio.com/');
 
 app.config(function($stateProvider, $urlRouterProvider){
 	$stateProvider

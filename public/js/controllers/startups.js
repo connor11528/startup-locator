@@ -1,5 +1,5 @@
 
-app.controller('StartupsCtrl', function($scope, FBURL, $firebaseArray){
+app.controller('StartupsCtrl', function($scope){
 	var ref = new Firebase(FBURL);
 	$scope.startupList = $firebaseArray(ref);
 

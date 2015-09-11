@@ -22,6 +22,7 @@ for (var i = 1; i <= 287; i++){
 				logo_url: startup.logo_url,
 				thumb_url: startup.thumb_url,
 				high_concept: startup.high_concept,
+				product_desc: startup.product_desc,
 				company_url: startup.company_url,
 				company_size: startup.company_size
 			};
@@ -31,6 +32,9 @@ for (var i = 1; i <= 287; i++){
 	});
 }
 
+for(var j = 0, len = rows.length; j < len; j++){
+	writer.write(rows[j]);
+}
 // write to file
 var file = fs.createWriteStream('SFstartups.csv');
 writer.pipe(file);

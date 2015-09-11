@@ -1,10 +1,15 @@
-mean-starter
+startup-locator
 =====
+
+> Locate startups
+
+### Add to MongoDB
+
+`$ mongoimport -d startup-locator -c startups --type csv --file server/SFstartups.csv --headerline`
 
 #### Getting started
 ```
 $ git clone <this_repo>
 $ npm install
-$ nodemon server # OR npm start
+$ nodemon server
 ```
-![aaaand I'm a dork](http://i.imgur.com/Vl8Ol6N.jpg)
