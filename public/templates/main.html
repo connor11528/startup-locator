@@ -1,14 +1,17 @@
 <h1>SF Startups</h1>
 
-
-<span ng-if='!startups' 
+<span ng-if='startups.length == 0' 
 	us-spinner></span>
 
 <ul class="list-group">
 	<li ng-repeat='startup in startups' class="list-group-item">
 		<a href ng-href='{{startup.angellist_url}}' target='_blank'>
-			<h3>{{startup.name}}</h3>
+			<h3>{{::startup.name}}</h3>
 		</a>
-		<p>{{startup.high_concept}}</p>
+		<p>{{::startup.high_concept}}</p>
 	</li>
 </ul>
+
+<div ng-if='startups.length != 0' style='height:100px;padding-top:40px;'>
+	<p><b>Loading more startups..</b></p>
+</div>

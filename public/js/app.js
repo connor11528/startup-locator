@@ -1,7 +1,8 @@
 
 var app = angular.module('startup-locator', [
 	'ui.router',
-	'angularSpinner'
+	'angularSpinner',
+	'angular-storage'
 ]);
 
 app.config(function($stateProvider, $urlRouterProvider){
@@ -9,7 +10,6 @@ app.config(function($stateProvider, $urlRouterProvider){
 		.state('home', {
 			url: "/",
 			templateUrl: "templates/main.html",
-			controller: 'MainCtrl'
 		})
 		.state('startups', {
 			url: "/startups",
@@ -21,19 +21,16 @@ app.config(function($stateProvider, $urlRouterProvider){
 });
 
 
-app.directive('scrolledtobottom', function ($scope) {
+app.directive('scrolledtobottom', function () {
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
             var raw = element[0];
-            console.log('loading directive');
                 
             element.bind('scroll', function () {
-                if (raw.scrollTop + raw.offsetHeight === raw.scrollHeight) {
-                    console.log("I am at the bottom");
-                    
-                    console.log(scope);
-                    $scope.loadMoreStartups();
+                if (raw.scrollTop + raw.offsetHeight === raw.scrollHeight) {                    
+                    scope.loadingMore = true;
+                    scope.loadMoreStartups();
                 }
             });
         }
