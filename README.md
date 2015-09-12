@@ -1,10 +1,10 @@
 startup-locator
 =====
 
-> Add login/register
-> Favorite companies
+> Favorite startups
 > Locate startups
 > Accept payments
+> deploy to production env
 
 ### Import to MongoDB
 

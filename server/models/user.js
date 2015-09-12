@@ -8,7 +8,8 @@ var mongoose = require('mongoose');
 var userSchema = new mongoose.Schema({
 	email: {type: String, required: true, unique: true },
 	password: {type: String, required: true, select: false },
-	admin: Boolean
+	admin: Boolean,
+	favorites: [{type : mongoose.Schema.ObjectId, ref : 'Startup'}]
 });
 
 

@@ -14,7 +14,10 @@ app.factory('user', function($http, store, API_URL){
 				password: newUser.password
 			}).then(logUserIn);
 		},
-		logout: logout
+		logout: logout,
+		favorite: function(startupId){
+			console.log('omg faves');
+		}
 	};
 
 	// Helper functions

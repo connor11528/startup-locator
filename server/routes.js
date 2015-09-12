@@ -6,7 +6,8 @@ var express = require('express'),
 	jwt = require('jsonwebtoken'),
 	utils = require('./utils'),
 	rootPath = path.normalize(__dirname + '/../'),
-	User = require('./models/user');
+	User = require('./models/user'),
+	Startup = require('./models/startup');
 
 var Promise = require("bluebird");
 var request = Promise.promisifyAll(require("request"));
@@ -73,6 +74,28 @@ module.exports = function(app){
 			var startupList = JSON.parse(startups)['startups'];
 			var leanStartupList = filterStartups(startupList);
 			res.json(leanStartupList);
+		});
+	});
+
+	apiRouter.get('/favorite/:angelId', function(req, res){
+		var user_id = req.query.user_id;
+
+		// find matching startup (in the future get this from request)
+		var startupQuery = Startup.findOne({ id: req.params.angelId });
+
+		startupQuery.exec(function(err, startup){
+			var startupMongoId = startup._id;
+
+			// add to user's favorites
+			User.findByIdAndUpdate(
+				user_id,
+				{ $push: {favorites: startupMongoId} },
+		    	{  safe: true, upsert: true})
+			.exec(function(err, user) {
+				if(err){ console.log(err); return res.json(err); }
+
+				return res.json(user);
+			});
 		});
 	});
 

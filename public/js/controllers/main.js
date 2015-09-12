@@ -12,6 +12,23 @@ app.controller('MainCtrl', function($scope, $http, store, user, $rootScope){
 		});
 	}
 
+	$scope.addFavorite = function(angellist_id){
+		var user_id = JSON.parse(store.get('sl-auth-user'))['_id'];
+		console.log(user_id);
+
+		if(user_id){
+
+			$http.get('/api/favorite/' + angellist_id, {
+				params: { user_id: user_id }
+			}).then(function(res){
+				console.log(res);
+			});
+		} else {
+			alert('You must be logged in for that!');
+		}
+
+	}
+
 	$scope.showConcept = function(startup){
 		startup.conceptShown = true;
 	};

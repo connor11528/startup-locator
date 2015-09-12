@@ -10,7 +10,8 @@ var startupSchema = new mongoose.Schema({
 	high_concept: String,
 	product_desc: String,
 	company_url: String,
-	company_size: String
+	company_size: String,
+	followers: [ {type : mongoose.Schema.ObjectId, ref : 'User'} ]
 });
 
 
