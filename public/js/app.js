@@ -16,7 +16,7 @@ app.run(function($rootScope, store){
 	var user = store.get('sl-auth-user');
 
 	if(user){
-		$rootScope.user = user;
+		$rootScope.user = JSON.parse(user);
 	}
 });
 

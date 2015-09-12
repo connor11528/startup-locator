@@ -80,22 +80,50 @@ module.exports = function(app){
 	apiRouter.get('/favorite/:angelId', function(req, res){
 		var user_id = req.query.user_id;
 
+		// find matching startup
+		var startupQuery = Startup.findOne({ id: req.params.angelId });
+		startupQuery.exec(function(err, startup){
+
+			// find user
+			var userQuery = User.findOne({ _id: user_id });
+			userQuery.exec(function(err, user){
+
+				if (user.favorites.indexOf(startup) == -1) {
+					// add to favorites
+					user.favorites.push(startup);
+						user.save(function(err, user){
+						console.log('actually saved!');
+						console.log(user);
+						res.json(user);
+					});
+				} else {
+					res.json({ error: 'Already favorited that startup' });
+				}
+			});
+		});
+	});
+
+	apiRouter.get('/unfavorite/:angelId', function(req, res){
+		var user_id = req.query.user_id;
+
 		// find matching startup (in the future get this from request)
 		var startupQuery = Startup.findOne({ id: req.params.angelId });
 
 		startupQuery.exec(function(err, startup){
-			var startupMongoId = startup._id;
+			var userQuery = User.findOne({ _id: user_id });
+			userQuery.exec(function(err, user){
+				var index = user.favorites.indexOf(startup);
+				console.log(startup);
+				console.log(index);
 
-			// add to user's favorites
-			User.findByIdAndUpdate(
-				user_id,
-				{ $push: {favorites: startupMongoId} },
-		    	{  safe: true, upsert: true})
-			.exec(function(err, user) {
-				if(err){ console.log(err); return res.json(err); }
+				user.favorites.splice(index, 1);
 
-				return res.json(user);
+				// save changes
+				user.save(function(err, user){
+					res.json(user);
+				});
 			});
+
 		});
 	});
 

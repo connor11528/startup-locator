@@ -12,9 +12,8 @@ app.controller('MainCtrl', function($scope, $http, store, user, $rootScope){
 		});
 	}
 
-	$scope.addFavorite = function(angellist_id){
+	$scope.addFavorite = function(angellist_id, index){
 		var user_id = JSON.parse(store.get('sl-auth-user'))['_id'];
-		console.log(user_id);
 
 		if(user_id){
 
@@ -22,12 +21,28 @@ app.controller('MainCtrl', function($scope, $http, store, user, $rootScope){
 				params: { user_id: user_id }
 			}).then(function(res){
 				console.log(res);
+				$scope.startups[index].favorited = true;
 			});
 		} else {
 			alert('You must be logged in for that!');
 		}
+	};
 
-	}
+	$scope.removeFavorite = function(angellist_id, index){
+		var user_id = JSON.parse(store.get('sl-auth-user'))['_id'];
+
+		if(user_id){
+
+			$http.get('/api/unfavorite/' + angellist_id, {
+				params: { user_id: user_id }
+			}).then(function(res){
+				console.log(res);
+				$scope.startups[index].favorited = false;
+			});
+		} else {
+			alert('You must be logged in for that!');
+		}
+	};
 
 	$scope.showConcept = function(startup){
 		startup.conceptShown = true;

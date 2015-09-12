@@ -33,10 +33,17 @@
 		    <a href 
 		    	class="btn btn-secondary-outline" 
 		    	ng-click='showConcept(startup)'
-		    	ng-class="{'active':startup.conceptShown}">Concept</a>
+		    	ng-class="{ 'active': startup.conceptShown }">Concept</a>
 		    <a href 
 		    	class="btn btn-primary-outline"
-		    	ng-click='addFavorite(startup.id)'>Favorite</a>
+		    	ng-click='addFavorite(startup.id, $index)'
+		    	ng-if="!startup.favorited">Favorite</a>
+		    <a href 
+		    	class="btn btn-primary-outline active"
+		    	ng-click='removeFavorite(startup.id, $index)'
+		    	ng-if="startup.favorited">
+		    		<i class="fa fa-check-square-o fa-1"></i> Favorited
+		    	</a>
 		    <a href class="btn btn-warning-outline">Map</a>
 	    </div>
 	  </div>
