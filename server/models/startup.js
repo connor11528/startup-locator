@@ -1,5 +1,4 @@
 
-
 var mongoose = require('mongoose');
 
 var startupSchema = new mongoose.Schema({
@@ -13,5 +12,6 @@ var startupSchema = new mongoose.Schema({
 	company_url: String,
 	company_size: String
 });
+
 
 mongoose.model('Startup', startupSchema);

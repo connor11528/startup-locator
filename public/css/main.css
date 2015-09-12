@@ -18,3 +18,8 @@
 .smaller {
 	font-size: 14px;
 }
+
+#loginBtn {
+	color:white;
+	cursor: pointer;
+}

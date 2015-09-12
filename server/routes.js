@@ -1,9 +1,12 @@
 var express = require('express'),
 	path = require('path'),
 	fs = require('fs'),
-	rootPath = path.normalize(__dirname + '/../'),
 	apiRouter = express.Router(),
-	router = express.Router();
+	router = express.Router(),
+	jwt = require('jsonwebtoken'),
+	utils = require('./utils'),
+	rootPath = path.normalize(__dirname + '/../'),
+	User = require('./models/user');
 
 var Promise = require("bluebird");
 var request = Promise.promisifyAll(require("request"));
@@ -65,7 +68,7 @@ function searchStartupByName(name){
 module.exports = function(app){
 	// get statups by page from angel.co
 	apiRouter.get('/startups/:page', function(req, res){
-
+		
 		getSFStartups(req.params.page).then(function(startups){
 			var startupList = JSON.parse(startups)['startups'];
 			var leanStartupList = filterStartups(startupList);
@@ -73,6 +76,75 @@ module.exports = function(app){
 		});
 	});
 
+	// add user
+	apiRouter.post('/users', function(req, res){
+
+		utils.hashPwd(req.body.password).then(function(hashedPwd){
+
+			var newUser = new User({
+				email: req.body.email,
+				password: hashedPwd,
+				admin: false
+			});
+
+			newUser.save(function(err){
+				if(err) throw err;
+
+				// create token
+				var token = jwt.sign(newUser, app.get('superSecret'), { expiresInminutes: 1440 });
+
+				newUser.password = undefined;
+
+				// send token
+				res.json({
+					success: true,
+					message: 'Successfully authenticated!',
+					token: token,
+					user: newUser
+				});
+			});
+		});
+		
+	});
+
+	// authenticate user
+	apiRouter.post('/users/auth', function(req, res){
+
+		// add back the password field for this query
+		var query = User.findOne({
+			email: req.body.email
+		}).select('_id email +password');
+
+		query.exec(function(err, user){
+			if(err) throw err;
+
+			if(!user){
+				res.json({ success: false, message: 'No user with that email' });
+			} else if(user){
+
+				// check password
+				utils.comparePwd(req.body.password, user.password).then(function(isMatch){
+					if(!isMatch){
+						res.json({ success: false, message: 'Wrong password' });
+					} else {
+
+						// create token
+						var token = jwt.sign(user, app.get('superSecret'), { expiresInminutes: 1440 });
+
+						user.password = undefined;
+
+						// send token
+						res.json({
+							success: true,
+							message: 'Successfully authenticated!',
+							token: token,
+							user: user
+						});
+					}
+				});
+			}
+		});
+	});
 
 
 	// angularjs catch all route
