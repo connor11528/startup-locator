@@ -29,7 +29,6 @@ app.directive('scrolledtobottom', function () {
                 
             element.bind('scroll', function () {
                 if (raw.scrollTop + raw.offsetHeight === raw.scrollHeight) {                    
-                    scope.loadingMore = true;
                     scope.loadMoreStartups();
                 }
             });

@@ -3,15 +3,82 @@
 <span ng-if='startups.length == 0' 
 	us-spinner></span>
 
-<ul class="list-group">
-	<li ng-repeat='startup in startups' class="list-group-item">
-		<a href ng-href='{{startup.angellist_url}}' target='_blank'>
-			<h3>{{::startup.name}}</h3>
-		</a>
-		<p>{{::startup.high_concept}}</p>
-	</li>
-</ul>
+<!-- Bootstrap 3
+<div class='row'>
+	<div class="col-md-3 myCard" ng-repeat='startup in startups'>
+	    <div class="thumbnail">
+	        <img ng-src="{{::startup.thumb_url}}" class="">
+	        <div class="caption">
+	             <h4 class="">{{::startup.name}}</h4>
+	            <p class="">{{::startup.high_concept}}</p>
+	        </div>
+	    </div>
+	</div>
+</div> -->
 
-<div ng-if='startups.length != 0' style='height:100px;padding-top:40px;'>
-	<p><b>Loading more startups..</b></p>
+<!-- Bootstrap 4 -->
+<div class="card-columns">
+	<div class="card" ng-repeat='startup in startups track by $index'>
+	  <img class="card-img-top" ng-src="{{::startup.thumb_url}}">
+	  <div class="card-block">
+	    <h3 class="card-title">{{::startup.name}}</h3>
+	    <p class="card-text"
+	    	ng-if='startup.conceptShown'>{{::startup.high_concept}}</p>
+	    <p class="card-text smaller"
+	    	ng-if='startup.conceptShown'>
+	    	<b>Company size:</b> {{::startup.company_size}}
+	    </p>
+
+	    <div class="btn-group btn-group-sm">
+		    <a href="#" 
+		    	class="btn btn-secondary-outline" 
+		    	ng-click='showConcept(startup)'
+		    	ng-class="{'active':startup.conceptShown}">Concept</a>
+		    <a href="#" class="btn btn-primary-outline">Favorite</a>
+		    <a href="#" class="btn btn-warning-outline">Map</a>
+	    </div>
+	  </div>
+
+	  <div class="card-footer text-muted" 
+			ng-if='startup.conceptShown && !startup.descriptionShown'
+			ng-click='showDescription(startup)'>
+			Learn more..
+		</div>
+
+	  <div class="card-block" ng-if='startup.descriptionShown'>
+	    <a ng-href="{{startup.company_url}}" class="card-link" target='_blank'>Website</a>
+	    <a ng-href="{{startup.angellist_url}}" class="card-link" target='_blank'>angel.co</a>
+	  </div>
+	  <div class="card-block" ng-if='startup.descriptionShown'>
+	  	{{::startup.product_desc}}
+	  </div>
+	  
+	  <div class="card-footer text-muted" 
+	  	ng-if='startup.descriptionShown'
+	  	ng-click='hideDescription(startup)'>
+	  	Hide
+	  </div>
+	</div>
+</div>
+
+<!-- Angular material
+<md-content class="md-padding" layout="row" layout-wrap>
+    <md-card ng-repeat='startup in startups' flex="33">
+      <img ng-src="{{::startup.thumb_url}}" class="md-card-image" alt="Washed Out">
+      <md-card-content>
+        <h2 class="md-title">{{::startup.name}}</h2>
+        <p>
+          {{::startup.high_concept}}
+        </p>
+      </md-card-content>
+      <div class="md-actions" layout="row" layout-align="end center">
+        <md-button>Action 1</md-button>
+        <md-button>Action 2</md-button>
+      </div>
+    </md-card>
+    <br/>
+</md-content> -->
+
+<div class='row text-center loadMore' ng-if='startups.length != 0' ng-click='loadMoreStartups()'>
+	<h3><b>Load more startups</b></h3>
 </div>

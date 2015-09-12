@@ -5,13 +5,25 @@ app.controller('MainCtrl', function($scope, $http, store){
 
 	// initially load startups
 	if($scope.startups.length == 0){
-		console.log('init req fired');
 
 		$http.get('/api/startups/' + $scope.currentPage).then(function(res){
 			$scope.startups = res.data;
 			store.set('startups', res.data);
 		});
 	}
+
+	$scope.showConcept = function(startup){
+		startup.conceptShown = true;
+	};
+
+	$scope.showDescription = function(startup){
+		console.log('showDescription')
+		startup.descriptionShown = true;
+	};
+
+	$scope.hideDescription = function(startup){
+		startup.descriptionShown = false;
+	};
 
 	$scope.loadMoreStartups = function(){
 		$scope.loadingMore = true;
