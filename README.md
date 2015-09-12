@@ -1,9 +1,12 @@
 startup-locator
 =====
 
+> Add login/register
+> Favorite companies
 > Locate startups
+> Accept payments
 
-### Add to MongoDB
+### Import to MongoDB
 
 `$ mongoimport -d startup-locator -c startups --type csv --file server/SFstartups.csv --headerline`
 

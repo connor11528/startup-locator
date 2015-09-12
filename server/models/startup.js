@@ -14,4 +14,4 @@ var startupSchema = new mongoose.Schema({
 });
 
 
-mongoose.model('Startup', startupSchema);
+module.exports = mongoose.model('Startup', startupSchema);

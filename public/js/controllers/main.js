@@ -1,5 +1,5 @@
 
-app.controller('MainCtrl', function($scope, $http, store){
+app.controller('MainCtrl', function($scope, $http, store, user, $rootScope){
 	$scope.startups = store.get('startups') || [];
 	$scope.currentPage = 1;
 
@@ -35,6 +35,11 @@ app.controller('MainCtrl', function($scope, $http, store){
 			}
 			$scope.loadingMore = false;
 		});
+	};
+
+	$scope.logout = function(){
+		user.logout();
+		$rootScope.user = false;
 	};
 	
 });

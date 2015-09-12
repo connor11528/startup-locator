@@ -15,11 +15,15 @@ mongoose.connect(envConfig.db);
 
 // EXPRESS CONFIG
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 app.use(methodOverride());
 app.use(cookieParser());
 app.use(express.static(__dirname + '/public'));
+
+// JWT config
+var jwtSecret = 'thupers3crT$12';
+app.set('superSecret', jwtSecret);
 
 // ROUTES
 require('./server/routes')(app);

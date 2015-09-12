@@ -8,18 +8,15 @@
 	overflow:scroll;
 }
 
-.loadMore {
-	height:100px;
-	padding-top:10px;
-	color:teal
-}
-
-
 .smaller {
 	font-size: 14px;
 }
 
-#loginBtn {
+a.nav-item {
 	color:white;
 	cursor: pointer;
+}
+
+.map-container {
+	height:100vh;
 }

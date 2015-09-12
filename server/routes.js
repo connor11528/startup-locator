@@ -94,7 +94,7 @@ module.exports = function(app){
 				var token = jwt.sign(newUser, app.get('superSecret'), { expiresInminutes: 1440 });
 
 				newUser.password = undefined;
-
+				
 				// send token
 				res.json({
 					success: true,
@@ -109,6 +109,8 @@ module.exports = function(app){
 
 	// authenticate user
 	apiRouter.post('/users/auth', function(req, res){
+
+		// TODO: handle if user does not exist
 
 		// add back the password field for this query
 		var query = User.findOne({

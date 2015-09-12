@@ -16,25 +16,32 @@
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
 </head>
-<body>
+<body ng-controller='MainCtrl'>
 
   <nav class="navbar navbar-fixed-top navbar-dark bg-primary">
-    <!-- <form class="form-inline navbar-form">
-      <input class="form-control" type="text" placeholder="Search">
-      <button class="btn btn-secondary-outline" type="submit">Search</button>
-    </form> -->
-    <div class="nav navbar-nav pull-right">
-      <a class="nav-item" id='loginBtn'>Login</a>
+    <div class="nav navbar-nav pull-right" ng-if='user.email'>
+      <div class="nav-item">{{user.email}}</div>
+      <a href class="nav-item" ng-click='logout()'>Logout</a>
+    </div>
+    <div class="nav navbar-nav pull-right" ng-if='!user.email'>
+      <a class="nav-item" 
+        id='loginBtn' 
+        data-toggle="modal"
+        data-target="#loginModal">Login</a>
+      <a class="nav-item" 
+        id='registerBtn' 
+        data-toggle="modal" 
+        data-target="#registerModal">Register</a>
     </div>
   </nav>
-  <div id='content' class='row' ng-controller='MainCtrl'>
+  <div id='content' class='row'>
     <!-- Infinite scroll: scrolledtobottom='loadMoreStartups()' -->
     <div class='col-sm-8 text-center' id='startupCol'>
       <div ui-view></div>
       
     </div>
     <div class='col-sm-4'>
-      <div class="map-container" style='height:100vh;'></div>
+      <div class="map-container"></div>
     </div>
   </div>
 
@@ -43,6 +50,8 @@
   <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyC3fb_HbxtC_CkmkyX35inL5M-I9xoa2bw&v=3.18&libraries=places"></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.4/raphael-min.js'></script>
   <script src='js/map.js'></script>
+
+  <script src='js/lib/bootstrap.js'></script>
 
   <!-- Angular -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular.js"></script>
@@ -53,11 +62,66 @@
   <script src='https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js'></script>
   <script src='js/modules/angular-spinner.js'></script>
 
+  <!-- angular-formly + dependency -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/api-check/7.5.0/api-check.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-formly/6.21.1/formly.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-formly-templates-bootstrap/6.0.0/angular-formly-templates-bootstrap.js"></script>
+
+  <!-- angular-storage -->
   <script type="text/javascript" src="https://cdn.rawgit.com/auth0/angular-storage/master/dist/angular-storage.js"></script>
 
   <!-- App -->
   <script src='js/app.js'></script>
+  <script src='js/factories/user.js'></script>
+  <script src='js/factories/authInterceptor.js'></script>
+
   <script src='js/controllers/main.js'></script>
   <script src='js/controllers/startups.js'></script>
+  <script src='js/controllers/login.js'></script>
+  <script src='js/controllers/register.js'></script>
+
+  <script src='js/directives/scrolledtobottom.js'></script>
+
+  <!-- Login Modal -->
+  <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller='LoginCtrl' id='loginModal'>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Login</h4>
+        </div>
+        <div class="modal-body">
+          <form name='loginForm' ng-submit='login(userCreds)' novalidate>
+            <formly-form model='userCreds' fields='loginFields' form='loginForm'>
+              <button type='submit' class='btn btn-primary' ng-disabled="loginForm.$invalid">Login</button>
+            </formly-form>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller='RegisterCtrl' id='registerModal'>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Register a new account</h4>
+        </div>
+        <div class="modal-body">
+          <form name='registerForm' ng-submit='register(newUser)' novalidate>
+            <formly-form model='newUser' fields='registerFields' form='registerForm'>
+              <button type='submit' class='btn btn-success' ng-disabled="registerForm.$invalid">Register</button>
+            </formly-form>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

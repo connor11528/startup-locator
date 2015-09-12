@@ -2,9 +2,27 @@
 var app = angular.module('startup-locator', [
 	'ui.router',
 	'angularSpinner',
-	'angular-storage'
-]);
+	'angular-storage',
+	'formly',
+	'formlyBootstrap'
+], function($httpProvider){
+	// will add token to header of requests if token is present
+	$httpProvider.interceptors.push('authInterceptor');
+});
 
+app.run(function($rootScope, store){
+	// if the user's data is in local storage
+	// show them as signed in
+	var user = store.get('sl-auth-user');
+
+	if(user){
+		$rootScope.user = user;
+	}
+});
+
+app.constant('API_URL', 'api/');
+
+// Routes
 app.config(function($stateProvider, $urlRouterProvider){
 	$stateProvider
 		.state('home', {
@@ -18,20 +36,4 @@ app.config(function($stateProvider, $urlRouterProvider){
 		});
 
 	$urlRouterProvider.otherwise("/");
-});
-
-
-app.directive('scrolledtobottom', function () {
-    return {
-        restrict: 'A',
-        link: function (scope, element, attrs) {
-            var raw = element[0];
-                
-            element.bind('scroll', function () {
-                if (raw.scrollTop + raw.offsetHeight === raw.scrollHeight) {                    
-                    scope.loadMoreStartups();
-                }
-            });
-        }
-    };
 });
