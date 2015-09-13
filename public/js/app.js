@@ -14,9 +14,7 @@ app.run(function($rootScope, store){
 	// if the user's data is in local storage
 	// show them as signed in
 	var user = store.get('sl-auth-user');
-	console.log(user);
 	if(user){
-
 		$rootScope.user = user;
 	}
 });
@@ -29,11 +27,6 @@ app.config(function($stateProvider, $urlRouterProvider){
 		.state('home', {
 			url: "/",
 			templateUrl: "templates/main.html",
-		})
-		.state('startups', {
-			url: "/startups",
-			templateUrl: "templates/startups.html",
-			controller: 'StartupsCtrl'
 		});
 
 	$urlRouterProvider.otherwise("/");

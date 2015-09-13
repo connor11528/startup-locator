@@ -69,14 +69,34 @@ function searchStartupByName(name){
 module.exports = function(app){
 	// get statups by page from angel.co
 	apiRouter.get('/startups/:page', function(req, res){
+		var perPage = 50
+    	var page = (parseInt(req.params.page) > 0) ? parseInt(req.params.page) : 0;
+
+		Startup
+			.find({})
+			.limit(perPage)
+			.skip(perPage * page)
+			.sort({ name: -1 })
+			.exec(function(err, startups){
+				if(err) throw err;
+
+				Startup.count().exec(function(err, count){
+					res.json({
+						startups: startups,
+						page: page,
+						pages: count/perPage
+					});
+				});
+			});
 		
-		getSFStartups(req.params.page).then(function(startups){
-			var startupList = JSON.parse(startups)['startups'];
-			var leanStartupList = filterStartups(startupList);
-			res.json(leanStartupList);
-		});
+		// getSFStartups(req.params.page).then(function(startups){
+		// 	var startupList = JSON.parse(startups)['startups'];
+		// 	var leanStartupList = filterStartups(startupList);
+		// 	res.json(leanStartupList);
+		// });
 	});
 
+	// favorite a startup
 	apiRouter.get('/favorite/:angelId', function(req, res){
 		var user_id = req.query.user_id;
 
@@ -89,11 +109,10 @@ module.exports = function(app){
 			userQuery.exec(function(err, user){
 
 				if (user.favorites.indexOf(startup) == -1) {
+
 					// add to favorites
 					user.favorites.push(startup);
-						user.save(function(err, user){
-						console.log('actually saved!');
-						console.log(user);
+					user.save(function(err, user){
 						res.json(user);
 					});
 				} else {
@@ -103,6 +122,7 @@ module.exports = function(app){
 		});
 	});
 
+	// unfavorite a startup
 	apiRouter.get('/unfavorite/:angelId', function(req, res){
 		var user_id = req.query.user_id;
 
@@ -112,10 +132,8 @@ module.exports = function(app){
 		startupQuery.exec(function(err, startup){
 			var userQuery = User.findOne({ _id: user_id });
 			userQuery.exec(function(err, user){
-				var index = user.favorites.indexOf(startup);
-				console.log(startup);
-				console.log(index);
 
+				var index = user.favorites.indexOf(startup);
 				user.favorites.splice(index, 1);
 
 				// save changes
@@ -166,7 +184,7 @@ module.exports = function(app){
 		// add back the password field for this query
 		var query = User.findOne({
 			email: req.body.email
-		}).select('_id email +password');
+		}).select('_id email +password favorites admin');
 
 		query.exec(function(err, user){
 			if(err) throw err;

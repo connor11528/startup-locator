@@ -1,0 +1,31 @@
+<nav class="navbar navbar-fixed-top navbar-dark bg-primary">
+    <a class='navbar-brand'>Startup Locator</a>
+    <div class="nav navbar-nav col-sm-4">
+      <input class="form-control" type="text" placeholder="Name of startup">
+    </div>
+    <div class='col-sm-2'>
+    <select class="c-select">
+      <option selected>Company Size</option>
+      <option value="1">1-10</option>
+      <option value="2">11-50</option>
+      <option value="3">51-100</option>
+    </select>
+    </div>
+    
+    <button class="btn btn-secondary-outline">Search</button>
+
+    <div class="nav navbar-nav pull-right" ng-if='user.email'>
+      <div class="nav-item">{{user.email}}</div>
+      <a href class="nav-item" ng-click='logout()'>Logout</a>
+    </div>
+    <div class="nav navbar-nav pull-right" ng-if='!user.email'>
+      <a class="nav-item" 
+        id='loginBtn' 
+        data-toggle="modal"
+        data-target="#loginModal">Login</a>
+      <a class="nav-item" 
+        id='registerBtn' 
+        data-toggle="modal" 
+        data-target="#registerModal">Register</a>
+    </div>
+  </nav>

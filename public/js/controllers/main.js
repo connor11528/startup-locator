@@ -3,24 +3,22 @@ app.controller('MainCtrl', function($scope, $http, store, user, $rootScope){
 	$scope.startups = store.get('startups') || [];
 	$scope.currentPage = 1;
 
-	var current_user = store.get('sl-auth-user') || false;
-	console.log(current_user)
-
 	// initially load startups
 	if($scope.startups.length == 0){
 
 		$http.get('/api/startups/' + $scope.currentPage).then(function(res){
-			$scope.startups = res.data;
-			store.set('startups', res.data);
+			var startups = res.data.startups;
+
+			$scope.startups = startups;
+			store.set('startups', startups);
 
 			// check for favorites if logged in
-			if(current_user){
+			if($rootScope.user){
 
 				for(var i = 0, len = $scope.startups.length; i < len; i++){
-					var userFavorite = _.includes(current_user.favorites, $scope.startups[i]);
+					var userFavorite = _.includes($rootScope.user.favorites, $scope.startups[i]);
 					
 					$scope.startups[i].favorited = (userFavorite) ? true : false;
-					console.log($scope.startups[i]);	
 				}
 			}
 
@@ -28,9 +26,10 @@ app.controller('MainCtrl', function($scope, $http, store, user, $rootScope){
 	}
 
 	$scope.addFavorite = function(angellist_id, index){
-		var user_id = current_user['_id'];
+		
+		if($rootScope.user){
 
-		if(user_id){
+			var user_id = $rootScope.user['_id'];
 
 			$http.get('/api/favorite/' + angellist_id, {
 				params: { user_id: user_id }
@@ -47,7 +46,7 @@ app.controller('MainCtrl', function($scope, $http, store, user, $rootScope){
 	};
 
 	$scope.removeFavorite = function(angellist_id, index){
-		var user_id = current_user['_id'];
+		var user_id = $rootScope.user['_id'];
 
 		if(user_id){
 
@@ -64,8 +63,9 @@ app.controller('MainCtrl', function($scope, $http, store, user, $rootScope){
 		}
 	};
 
-	$scope.showConcept = function(startup){
-		startup.conceptShown = true;
+	$scope.toggleConcept = function(startup){
+		startup.conceptShown = (startup.conceptShown) ? false : true;
+		store.set('startups', $scope.startups);
 	};
 
 	$scope.showDescription = function(startup){
@@ -73,7 +73,9 @@ app.controller('MainCtrl', function($scope, $http, store, user, $rootScope){
 	};
 
 	$scope.hideDescription = function(startup){
+		startup.conceptShown = false;
 		startup.descriptionShown = false;
+		console.log(startup)
 	};
 
 	$scope.loadMoreStartups = function(){
@@ -81,12 +83,14 @@ app.controller('MainCtrl', function($scope, $http, store, user, $rootScope){
 		$scope.currentPage++;
 
 		$http.get('/api/startups/' + $scope.currentPage).then(function(res){
-			for(var i = 0, len = res.data.length; i < len; i++){
-				$scope.startups.push(res.data[i]);
+			var startups = res.data.startups;
+			console.log(startups);
+			for(var i = 0, len = startups.length; i < len; i++){
+				$scope.startups.push(startups[i]);
 
 				// check for favorites
-				if(current_user){
-					var userFavorite = _.includes(current_user.favorites, res.data[i]);
+				if($rootScope.user){
+					var userFavorite = _.includes($rootScope.user.favorites, startups[i]);
 
 					$scope.startups[i].favorited = (userFavorite) ? true : false;
 				}
@@ -103,6 +107,7 @@ app.controller('MainCtrl', function($scope, $http, store, user, $rootScope){
 		for(var i = 0, len = $scope.startups.length; i < len; i++){
 			$scope.startups[i].favorited = false;
 		}
+		store.set('startups', $scope.startups);
 	};
 	
 });

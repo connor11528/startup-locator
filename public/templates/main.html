@@ -1,22 +1,7 @@
-<h1>SF Startups</h1>
 
 <span ng-if='startups.length == 0' 
 	us-spinner></span>
 
-<!-- Bootstrap 3
-<div class='row'>
-	<div class="col-md-3 myCard" ng-repeat='startup in startups'>
-	    <div class="thumbnail">
-	        <img ng-src="{{::startup.thumb_url}}" class="">
-	        <div class="caption">
-	             <h4 class="">{{::startup.name}}</h4>
-	            <p class="">{{::startup.high_concept}}</p>
-	        </div>
-	    </div>
-	</div>
-</div> -->
-
-<!-- Bootstrap 4 -->
 <div class="card-columns">
 	<div class="card" ng-repeat='startup in startups track by $index'>
 	  <img class="card-img-top" ng-src="{{::startup.thumb_url}}">
@@ -25,15 +10,14 @@
 	    <p class="card-text"
 	    	ng-if='startup.conceptShown'>{{::startup.high_concept}}</p>
 	    <p class="card-text smaller"
-	    	ng-if='startup.conceptShown'>
+	    	ng-if='startup.conceptShown && startup.company_size'>
 	    	<b>Company size:</b> {{::startup.company_size}}
 	    </p>
 
 	    <div class="btn-group btn-group-sm">
-		    <a href 
-		    	class="btn btn-secondary-outline" 
-		    	ng-click='showConcept(startup)'
-		    	ng-class="{ 'active': startup.conceptShown }">Concept</a>
+		    <a href ng-if='!startup.descriptionShown && !startup.conceptShown'
+		    	class="btn btn-warning-outline" 
+		    	ng-click='toggleConcept(startup)'>Concept</a>
 		    <a href 
 		    	class="btn btn-primary-outline"
 		    	ng-click='addFavorite(startup.id, $index)'
@@ -44,11 +28,11 @@
 		    	ng-if="startup.favorited">
 		    		<i class="fa fa-check-square-o fa-1"></i> Favorited
 		    	</a>
-		    <a href class="btn btn-warning-outline">Map</a>
+		    <!-- <a href class="btn btn-warning-outline">Map</a> -->
 	    </div>
 	  </div>
 
-	  <div class="card-footer text-muted" 
+	  <div class="card-footer text-muted" style='cursor:pointer;'
 			ng-if='startup.conceptShown && !startup.descriptionShown'
 			ng-click='showDescription(startup)'>
 			Learn more..
@@ -69,24 +53,6 @@
 	  </div>
 	</div>
 </div>
-
-<!-- Angular material
-<md-content class="md-padding" layout="row" layout-wrap>
-    <md-card ng-repeat='startup in startups' flex="33">
-      <img ng-src="{{::startup.thumb_url}}" class="md-card-image" alt="Washed Out">
-      <md-card-content>
-        <h2 class="md-title">{{::startup.name}}</h2>
-        <p>
-          {{::startup.high_concept}}
-        </p>
-      </md-card-content>
-      <div class="md-actions" layout="row" layout-align="end center">
-        <md-button>Action 1</md-button>
-        <md-button>Action 2</md-button>
-      </div>
-    </md-card>
-    <br/>
-</md-content> -->
 
 <div class='row text-center' ng-if='startups.length != 0' >
 	<button type="button" class="btn btn-primary btn-lg btn-block" ng-click='loadMoreStartups()'>More</button>

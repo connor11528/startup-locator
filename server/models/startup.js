@@ -14,5 +14,4 @@ var startupSchema = new mongoose.Schema({
 	followers: [ {type : mongoose.Schema.ObjectId, ref : 'User'} ]
 });
 
-
 module.exports = mongoose.model('Startup', startupSchema);

@@ -32,7 +32,15 @@ app.controller('LoginCtrl', function($rootScope, $scope, user, $state){
 
 				$('#loginModal').modal('hide');
 				$rootScope.user = res.data.user;
-				$state.go('home');
+
+				// load up the favorites
+				console.log($rootScope.user.favorites);
+				for(var i = 0, len = $scope.$parent.startups.length; i < len; i++){
+					var userFavorite = _.includes($rootScope.user.favorites, $scope.$parent.startups[i]._id);
+					console.log($scope.$parent.startups[i], userFavorite);
+					
+					$scope.$parent.startups[i].favorited = (userFavorite) ? true : false;
+				}
 			}	
 		}, function handleError(res){
 			console.error('Error: ' + JSON.stringify(res.data));

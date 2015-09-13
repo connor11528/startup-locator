@@ -53,7 +53,14 @@ app.controller('RegisterCtrl', function($rootScope, $scope, user, $state){
 
 				$('#registerModal').modal('hide');
 				$rootScope.user = res.data.user;
-				$state.go('home');
+
+				// load up the favorites
+				var startups = $scope.$parent.startups;
+				for(var i = 0, len = startups.length; i < len; i++){
+					var userFavorite = _.includes($rootScope.user.favorites, startups[i]);
+					
+					startups[i].favorited = (userFavorite) ? true : false;
+				}
 			}
 		}, handleError);
 	};

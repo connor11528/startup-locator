@@ -13,7 +13,15 @@ for (var i = 1; i <= 287; i++){
 		var resObj = JSON.parse(startupsRes);
 		var startups = resObj.startups;
 
-		startups.forEach(function(startup){
+		startups.forEach(function(startup, j){
+
+			if(typeof startup.high_concept == 'string'){
+				startup.high_concept = startup.high_concept.replace(/(\r\n|\n|\r)/gm,"");
+			}
+
+			if(typeof startup.product_desc == 'string'){
+				startup.product_desc = startup.product_desc.replace(/(\r\n|\n|\r)/gm,"");
+			}
 
 			var row = {
 				id: startup.id,
@@ -26,15 +34,18 @@ for (var i = 1; i <= 287; i++){
 				company_url: startup.company_url,
 				company_size: startup.company_size
 			};
+			console.log(row);
+
 			writer.write(row);
 			rows.push(row);
 		});
 	});
 }
 
-for(var j = 0, len = rows.length; j < len; j++){
-	writer.write(rows[j]);
-}
+// for(var j = 0, len = rows.length; j < len; j++){
+// 	writer.write(rows[j]);
+// }
+
 // write to file
 var file = fs.createWriteStream('SFstartups.csv');
 writer.pipe(file);
