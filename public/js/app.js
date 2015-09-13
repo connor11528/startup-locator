@@ -14,9 +14,10 @@ app.run(function($rootScope, store){
 	// if the user's data is in local storage
 	// show them as signed in
 	var user = store.get('sl-auth-user');
-
+	console.log(user);
 	if(user){
-		$rootScope.user = JSON.parse(user);
+
+		$rootScope.user = user;
 	}
 });
 
